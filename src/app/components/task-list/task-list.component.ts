@@ -1,27 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { Task, TaskService } from '../../services/task.service';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
+}
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css']
+  standalone: true,
+  imports: [CommonModule]
 })
-export class TaskListComponent implements OnInit {
-  tasks: Task[] = [];
+export class TaskListComponent {
+  tasks: Task[] = [
+    { id: 1, title: 'Tarea 1', description: 'Descripción 1', completed: false },
+    { id: 2, title: 'Tarea 2', description: 'Descripción 2', completed: true }
+  ];
 
-  constructor(private taskService: TaskService) { }
-
-  ngOnInit(): void {
-    this.tasks = this.taskService.getTasks();
-  }
-
-  toggleCompletion(task: Task): void {
+  toggleCompletion(task: Task) {
     task.completed = !task.completed;
-    this.taskService.updateTask(task);
   }
 
-  deleteTask(id: number): void {
-    this.taskService.deleteTask(id);
-    this.tasks = this.taskService.getTasks();
+  deleteTask(taskId: number) {
+    this.tasks = this.tasks.filter(task => task.id !== taskId);
   }
 }
